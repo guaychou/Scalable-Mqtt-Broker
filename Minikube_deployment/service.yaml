@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hpa-mosquitto
+  namespace: default
+  labels:
+        app: hpa-mosquitto
+spec:
+  type: NodePort
+  ports:
+  - port: 1883
+    targetPort: mosquitto-port
+    protocol: TCP
+  selector:
+    app: hpa-mosquitto
