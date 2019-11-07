@@ -16,7 +16,7 @@ spec:
       containers:
       - name: mosquitto
         image: lordchou_mosquitto
-        imagePullPolicy: Never
+        imagePullPolicy: always
         ports:
         - name: mqtt-port
           containerPort: 1883
