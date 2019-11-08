@@ -5,13 +5,13 @@ Lightweight Mosquitto MQTT Broker Alpine Docker implementation
 Clone this repo First
 
 ```sh
-$ git clone https://github.com/guaychou/Mosquitto-Alpine.git
+$ git clone https://github.com/guaychou/Scalable-Mqtt-Broker.git
 ```
 
 Change to directory...
 
 ```sh
-$ cd Mosquitto-Alpine
+$ cd Scalable-Mqtt-Broker
 ```
 
 Build Docker Image
