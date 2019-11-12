@@ -1,0 +1,34 @@
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "mosquitto.fullname" . }}
+  labels:
+{{ include "mosquitto.labels" . | indent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "mosquitto.fullname" . }}
+  minReplicas: {{ .Values.replica.min }}
+  maxReplicas: {{ .Values.replica.max }}
+  metrics:
+{{- with .Values.hpa.cpuPercentage }}
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: {{ . }}
+{{- end }}
+{{- with .Values.hpa.memoryPercentage }}
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: {{ . | quote }}
+{{- end }}
+{{- with .Values.hpa.brokerClientsConnected }}
+  - type: Pods
+    pods:
+      metricName: broker_clients_connected
+      targetAverageValue: {{ . }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,6 @@
+Get your Mosquitto end points by running these command: 
+
+export MQTT_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "mosquitto.fullname"  . }})
+export MQTT_ENDPOINT=$(kubectl get svc/{{ template "mosquitto.fullname" . }}  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+echo tcp://$MQTT_ENDPOINT:{{ .Values.service.port }}

@@ -1,0 +1,40 @@
+# Default values for mosquitto.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  pullPolicy: IfNotPresent
+
+mosquitto:
+  image: 300421616546.dkr.ecr.us-east-2.amazonaws.com/mosquitto-alpine
+
+prometheus:
+  scrape: true
+
+exporter:
+  image: 300421616546.dkr.ecr.us-east-2.amazonaws.com/mosquitto-exporter
+  port: 9234
+
+service:
+  type: LoadBalancer
+  port: 1883
+
+replica:
+  min: 1
+  max: 10
+
+resources:
+  requests: 
+    cpu: "250m"
+    memory: "64Mi"   
+  limits:
+    cpu: "500m"
+    memory: "128Mi"
+
+hpa:
+  enabled: true
+  cpuPercentage: 80
+  memoryPercentage: 512Mi
+  brokerClientsConnected: 100

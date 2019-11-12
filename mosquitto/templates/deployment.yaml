@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mosquitto.fullname" . }}
+  labels:
+{{ include "mosquitto.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "mosquitto.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "mosquitto.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        prometheus.io/scrape: {{ .Values.prometheus.scrape | quote }}
+        prometheus.io/port: {{ .Values.exporter.port | quote }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.mosquitto.image }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: mqtt-port
+              containerPort: 1883
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+            
+        - name: {{ .Chart.Name -}}-exporter
+          image: "{{ .Values.exporter.image }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: exporter-port
+              containerPort: 9234
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
