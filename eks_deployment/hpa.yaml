@@ -4,7 +4,7 @@ metadata:
   name: hpa-mosquitto
   namespace: default
   labels:
-        app: hpa-mosquitto
+    app: hpa-mosquitto
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -16,8 +16,12 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: 10
+      targetAverageUtilization: 80
   - type: Resource
     resource:
       name: memory
-      targetAverageValue: 1000Mi
+      targetAverageValue: "512Mi"
+  - type: Pods
+    pods:
+      metricName: broker_clients_connected
+      targetAverageValue: 100

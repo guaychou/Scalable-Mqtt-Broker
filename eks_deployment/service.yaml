@@ -6,10 +6,10 @@ metadata:
   labels:
         app: hpa-mosquitto
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - port: 1883
-    targetPort: mosquitto-port
+    targetPort: 1883
     protocol: TCP
   selector:
     app: hpa-mosquitto

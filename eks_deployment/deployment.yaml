@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-mosquitto
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hpa-mosquitto
+  template:
+    metadata:
+      labels:
+        app: hpa-mosquitto
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9234'
+    spec:
+      containers:
+      - name: mosquitto
+        image: 300421616546.dkr.ecr.us-east-2.amazonaws.com/mosquitto-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: mqtt-port
+          containerPort: 1883
+        resources:
+          requests: 
+            cpu: "250m"
+            memory: "64Mi"
+          
+      - name: mosquitto-exporter
+        image: 300421616546.dkr.ecr.us-east-2.amazonaws.com/mosquitto-exporter
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: exporter-port
+          containerPort: 9234
+        resources:
+          requests: 
+            cpu: "250m"
+            memory: "64Mi"   
