@@ -27,6 +27,9 @@ spec:
           requests: 
             cpu: "250m"
             memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
           
       - name: mosquitto-exporter
         image: 300421616546.dkr.ecr.us-east-2.amazonaws.com/mosquitto-exporter
@@ -38,3 +41,6 @@ spec:
           requests: 
             cpu: "250m"
             memory: "64Mi"   
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
