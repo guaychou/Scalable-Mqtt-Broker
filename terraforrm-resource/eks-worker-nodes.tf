@@ -7,6 +7,8 @@
 #  * AutoScaling Group to launch worker instances
 #
 
+
+
 resource "aws_iam_role" "kevin-node" {
   name = "terraform-eks-kevin-node"
 
@@ -31,6 +33,7 @@ resource "aws_iam_role_policy_attachment" "kevin-node-AmazonEKSWorkerNodePolicy"
   role       = "${aws_iam_role.kevin-node.name}"
 }
 
+
 resource "aws_iam_role_policy_attachment" "kevin-node-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = "${aws_iam_role.kevin-node.name}"
@@ -38,6 +41,11 @@ resource "aws_iam_role_policy_attachment" "kevin-node-AmazonEKS_CNI_Policy" {
 
 resource "aws_iam_role_policy_attachment" "kevin-node-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = "${aws_iam_role.kevin-node.name}"
+}
+
+resource "aws_iam_role_policy_attachment" "kevin-node-Autoscaling" {
+  policy_arn = "arn:aws:iam::300421616546:policy/autoscalingNodePolicy"
   role       = "${aws_iam_role.kevin-node.name}"
 }
 
@@ -113,7 +121,7 @@ resource "aws_launch_configuration" "kevin" {
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.kevin-node.name}"
   image_id                    = "${data.aws_ami.eks-worker.id}"
-  instance_type               = "m4.large"
+  instance_type               = "t2.small"
   name_prefix                 = "terraform-eks-kevin"
   security_groups             = ["${aws_security_group.kevin-node.id}"]
   user_data_base64            = "${base64encode(local.kevin-node-userdata)}"
@@ -126,7 +134,7 @@ resource "aws_launch_configuration" "kevin" {
 resource "aws_autoscaling_group" "kevin" {
   desired_capacity     = 2
   launch_configuration = "${aws_launch_configuration.kevin.id}"
-  max_size             = 2
+  max_size             = 5
   min_size             = 1
   name                 = "terraform-eks-kevin"
   vpc_zone_identifier  = "${aws_subnet.kevin[*].id}"
@@ -140,6 +148,16 @@ resource "aws_autoscaling_group" "kevin" {
   tag {
     key                 = "kubernetes.io/cluster/${var.cluster-name}"
     value               = "owned"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/${var.cluster-name}"
+    value               = "owned"
+    propagate_at_launch = true
+  }
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/enabled"
+    value               = "true"
     propagate_at_launch = true
   }
 }
