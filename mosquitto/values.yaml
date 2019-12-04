@@ -23,18 +23,26 @@ service:
 
 replica:
   min: 1
-  max: 10
+  max: 4
 
 resources:
   requests: 
-    cpu: "250m"
-    memory: "64Mi"   
+    cpu: 250m
+    memory: 100Mi
   limits:
-    cpu: "500m"
-    memory: "128Mi"
+    cpu: 500m
+    memory: 128Mi
+
+resourcesExporter:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  limits:
+    cpu: 200m
+    memory: 200Mi
 
 hpa:
   enabled: true
   cpuPercentage: 80
-  memoryPercentage: 512Mi
-  brokerClientsConnected: 100
+  memoryAverage: 384Mi
+  brokerClientsConnected: 20000

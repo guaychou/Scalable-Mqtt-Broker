@@ -38,4 +38,4 @@ spec:
               containerPort: 9234
               protocol: TCP
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.resourcesExporter | nindent 12 }}

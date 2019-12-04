@@ -19,11 +19,11 @@ spec:
       name: cpu
       targetAverageUtilization: {{ . }}
 {{- end }}
-{{- with .Values.hpa.memoryPercentage }}
+{{- with .Values.hpa.memoryAverage }}
   - type: Resource
     resource:
       name: memory
-      targetAverageValue: {{ . | quote }}
+      targetAverageValue: {{ . }}
 {{- end }}
 {{- with .Values.hpa.brokerClientsConnected }}
   - type: Pods
