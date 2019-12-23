@@ -134,7 +134,7 @@ resource "aws_launch_configuration" "kevin" {
 resource "aws_autoscaling_group" "kevin" {
   desired_capacity     = 2
   launch_configuration = "${aws_launch_configuration.kevin.id}"
-  max_size             = 10
+  max_size             = 8
   min_size             = 1
   name                 = "terraform-eks-kevin"
   vpc_zone_identifier  = "${aws_subnet.kevin[*].id}"

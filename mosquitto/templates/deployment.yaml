@@ -29,6 +29,16 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: 1883
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 1883
+            initialDelaySeconds: 15
+            periodSeconds: 20
             
         - name: {{ .Chart.Name -}}-exporter
           image: "{{ .Values.exporter.image }}"
@@ -39,3 +49,15 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resourcesExporter | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9234
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9234
+            initialDelaySeconds: 15
+            periodSeconds: 20

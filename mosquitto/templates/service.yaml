@@ -4,6 +4,8 @@ metadata:
   name: {{ include "mosquitto.fullname" . }}
   labels:
 {{ include "mosquitto.labels" . | indent 4 }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
   type: {{ .Values.service.type }}
   ports:
