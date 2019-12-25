@@ -20,9 +20,7 @@ exporter:
 service:
   type: LoadBalancer
   port: 1883
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: nlb
-    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 0
+  annotations: {}
 
 replica:
   min: 1
