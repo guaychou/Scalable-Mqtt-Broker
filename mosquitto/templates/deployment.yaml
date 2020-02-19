@@ -25,7 +25,10 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: mqtt-port
-              containerPort: 1883
+              containerPort: {{ .Values.mosquitto.port }}
+              protocol: TCP
+            - name: exporter-port
+              containerPort: {{ .Values.exporter.port }}
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -37,27 +40,5 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 1883
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            
-        - name: {{ .Chart.Name -}}-exporter
-          image: "{{ .Values.exporter.image }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: exporter-port
-              containerPort: 9234
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.resourcesExporter | nindent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /metrics
-              port: 9234
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /metrics
-              port: 9234
             initialDelaySeconds: 15
             periodSeconds: 20
